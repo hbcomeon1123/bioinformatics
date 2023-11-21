@@ -1,0 +1,83 @@
+######多因素生存分析GEO
+library("survival")
+library('survminer')
+library('dplyr')
+library('glmnet')
+library('ggplot2')
+library('GGally')
+library("rms")
+library('survivalROC')
+library("plotROC")
+survival_cancer=read.table("GEO_cox.txt",header=T,row.names=1)
+cox <- coxph(Surv(time, state) ~ ., data =survival_cancer)
+cox <- step(cox,direction = "both") 
+riskScore=predict(cox,type="risk",newdata=survival_cancer)
+risk=as.vector(ifelse(riskScore>median(riskScore),"high","low"))
+write.csv(cbind(id=rownames(cbind(survival_cancer[,1:2],riskScore,risk)),
+                cbind(survival_cancer[,1:2],riskScore,risk)),file="GEO_cox2.csv",quote=F,row.names=F)
+cox
+summary(cox)
+
+
+
+
+#########KM分析GEO
+library("survival")
+library('survminer')
+library('dplyr')
+library('glmnet')
+library('ggplot2')
+library('GGally')
+library("rms")
+library('survivalROC')
+library("plotROC")
+dat1<-read.csv("GEO_cox2.csv",row.names = 1)
+my.surv<-Surv(dat1$time,dat1$state=='1')
+kmfit1<-survfit(my.surv~risk,data = dat1)
+summary(kmfit1)
+png(file="GEO_cox2.png")
+windowsFonts(RMN=windowsFont("Times New Roman"))
+mytheme=theme(plot.title=element_text(family="RMN",size="29"),
+              axis.text.x=element_text(family="RMN",size="29"),
+			  axis.title.x=element_text(family="RMN",size="29"),
+			  axis.text.y=element_text(family="RMN",size="29"),
+			  axis.title.y=element_text(family="RMN",size="29"),
+			  legend.title=element_text(family="RMN",size=29),
+			  legend.text=element_text(family="RMN",size=29),
+			  panel.grid.major=element_blank(),
+              panel.grid.minor=element_blank(),
+              panel.background=element_blank(),
+			  axis.line=element_line(colour='black'))			     	 			  
+n=ggsurvplot(kmfit1,pval=T,risk.table.col="strata",xlab="month",
+           palette=c("#e52b50","#8806ce"),pval.size=8,pval.family="RMN",
+           ggtheme=mytheme)
+print(n)
+dev.off()	  
+
+
+
+#ROC曲线分析GEO
+library("survival")
+library('survminer')
+library('dplyr')
+library('glmnet')
+library('ggplot2')
+library('GGally')
+library("rms")
+library('survivalROC')
+library("plotROC")
+library(pROC)
+target.url1 <- 'GEO_cox2.csv'
+data <- read.csv(target.url1,header = T) 
+windowsFonts(HEL=windowsFont("Helvetica CE 55 Roman"),
+             RMN=windowsFont("Times New Roman"),
+             ARL=windowsFont("Arial"))
+{  
+  lxrroc1 <- plot.roc(data$state, data$riskScore)# ROC分析  
+  best<-coords(lxrroc1, "best", ret ="all", transpose =F)## 最佳分割点  
+  plot.roc(lxrroc1,col="#FF6665", identity.col ="grey", legacy.axes=T,
+  print.auc.x=0.5,print.auc.y=0.4,cex.lab=2.5,cex.axis=2.4,cex.main=2.5,family="RMN")  
+  legend("bottomright",paste('AUC=',round(lxrroc1$auc,3),sep = ""),cex=2.1) 
+}
+
+

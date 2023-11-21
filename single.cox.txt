@@ -1,0 +1,36 @@
+library("survival")
+survival_cancer=read.table("survival.cancer.txt",header=T,row.names=1)
+zz <- colnames(survival_cancer)
+z1=zz[-1]
+zx <- z1[-1]
+uni_cox_sig_genes <- c()
+beta_co <- c()
+HR <- c()
+z_p <- c()
+Wald_p <- c()
+Likelihood_p <- c()
+for (candidate_gene in gsub(zx, pattern = '-', replacement = '_')){
+  formula <- as.formula(paste0('Surv(time, state)~', candidate_gene))
+  surv_uni_cox <- summary(coxph(formula, data = survival_cancer))
+  ph_hypothesis_p <- cox.zph(coxph(formula, data = survival_cancer))$table[1,3]
+  if (surv_uni_cox$coefficients[,5]<0.05 & ph_hypothesis_p>0.05){ 
+    uni_cox_sig_genes <- append(uni_cox_sig_genes, candidate_gene)
+    beta_co <- append(beta_co, surv_uni_cox$coefficients[,1])
+    HR <- append(HR, exp(surv_uni_cox$coefficients[,1]))
+    z_p <- append(z_p, surv_uni_cox$coefficients[,5])
+    Wald_p <- append(Wald_p, as.numeric(surv_uni_cox$waldtest[3]))
+	Likelihood_p <- append(Likelihood_p, as.numeric(surv_uni_cox$logtest[3]))
+  }
+}
+uni_cox_df <- data.frame('uni_cox_sig_genes'=uni_cox_sig_genes, 
+                         'beta'=beta_co, 
+                         'Hazard_Ratio'=HR,  
+                         'wald.test'=Wald_p,
+                         'pvalue'=z_p,
+						 'likelihood'=Likelihood_p)
+write.csv(uni_cox_df,file = "single.cox.csv",quote = F)
+summary(surv_uni_cox)
+
+
+
+

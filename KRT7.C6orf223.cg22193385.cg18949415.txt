@@ -1,0 +1,265 @@
+#######
+library(plyr)
+data_u=read.csv(file="feature_combine_11.csv",row.names = 1) 
+data_d=read.csv(file="feature_combine_22.csv",row.names = 1) 
+jieguo_u=c("D")
+for (i in 1:nrow(data_u)){
+a=read.csv(file="14he.csv",row.names = 1)
+    train_u <- data_u[-i,] 
+    n_u=0
+for(m in 1:4){ 
+     assign(paste("n", m, sep=""), sum(train_u[,m]))
+     tmp <- get(paste("n", m, sep=""))
+     a[m,1]=tmp
+ n_u=n_u+a[m,1]*log(a[m,1],10)  
+ }
+N_u=sum(a[,1])
+test_u <- data_u[i,]
+test_d <- data_d[i,]
+test=test_u  
+c=read.csv(file="14he.csv",row.names = 1)
+b=read.csv(file="testhe.csv",row.names = 1)
+h=read.csv(file="testhe.csv",row.names = 1)
+for(x in 1:nrow(test)){
+ assign(paste("n", x, sep=""), sum(test[x,]))
+     tmp <- get(paste("n", x, sep=""))
+    b[x,1]=tmp 
+NEW_u=rbind(train_u,test[x,])   
+p=0
+j=0
+for(m in 1:4){
+assign(paste("n", m, sep=""), sum(NEW_u[,m]))
+tmp <- get(paste("n", m, sep=""))
+    c[m,1]=tmp   
+p=p+c[m,1]*log(c[m,1],10)
+if(test[x,m]==0){
+j=0
+}else
+j=j+test[x,m]*log(test[x,m],10)
+}
+M_m_n=p-j-n_u
+M_N=sum(c[,1])
+D_M_N=M_N*log(M_N,10)-N_u*log(N_u,10)-b[x,1]*log(b[x,1],10)
+D=D_M_N-M_m_n
+h[x,1]=D
+}
+jieguo_u=rbind(jieguo_u,h)
+}
+jieguo1_u=jieguo_u[-1,]
+write.csv(jieguo1_u,file="normal_deta_n1.csv") 
+##########
+library(plyr)
+data_u=read.csv(file="feature_combine_11.csv",row.names = 1)
+data_d=read.csv(file="feature_combine_22.csv",row.names = 1) 
+jieguo_d=c("D")
+jieguo_d_mean=data.frame()
+for (i in 1:nrow(data_d)){
+a=read.csv(file="14he.csv",row.names = 1)
+    train_u <- data_u 
+    n_u=0
+for(m in 1:4){ 
+     assign(paste("n", m, sep=""), sum(train_u[,m]))
+     tmp <- get(paste("n", m, sep=""))
+     a[m,1]=tmp
+ n_u=n_u+a[m,1]*log(a[m,1],10)  
+ }
+N_u=sum(a[,1])
+test_d <- data_d[i,]
+test=test_d 
+c=read.csv(file="14he.csv",row.names = 1)
+b=read.csv(file="testhe.csv",row.names = 1)
+h=read.csv(file="testhe.csv",row.names = 1)
+for(x in 1:nrow(test)){
+ assign(paste("n", x, sep=""), sum(test[x,]))
+     tmp <- get(paste("n", x, sep=""))
+    b[x,1]=tmp 
+NEW_u=rbind(train_u,test[x,])   
+p=0
+j=0
+for(m in 1:4){
+assign(paste("n", m, sep=""), sum(NEW_u[,m]))
+tmp <- get(paste("n", m, sep=""))
+    c[m,1]=tmp   
+p=p+c[m,1]*log(c[m,1],10)
+if(test[x,m]==0){
+j=0
+}else
+j=j+test[x,m]*log(test[x,m],10)
+}
+M_m_n=p-j-n_u
+M_N=sum(c[,1])
+D_M_N=M_N*log(M_N,10)-N_u*log(N_u,10)-b[x,1]*log(b[x,1],10)
+D=D_M_N-M_m_n
+h[x,1]=D
+ }
+jieguo_d=rbind(jieguo_d,h)
+}
+jieguo1_d=jieguo_d[-1,]
+write.csv(jieguo1_d,file="normal_deta_n2.csv")
+
+
+#######
+library(plyr)
+data_u=read.csv(file="feature_combine_11.csv",row.names = 1) 
+data_d=read.csv(file="feature_combine_22.csv",row.names = 1)
+jieguo_d=c("D")
+for (i in 1:1:nrow(data_d)){
+a=read.csv(file="14he.csv",row.names = 1)
+    train_d <- data_d[-i,]  
+    n_d=0
+for(m in 1:4){
+     assign(paste("n", m, sep=""), sum(train_d[,m]))
+     tmp <- get(paste("n", m, sep=""))
+     a[m,1]=tmp
+     n_d=n_d+a[m,1]*log(a[m,1],10)  
+ }
+N_d=sum(a[,1])
+test_d <- data_d[i,]
+test=test_d  
+c=read.csv(file="14he.csv",row.names = 1)
+b=read.csv(file="testhe.csv",row.names = 1)
+h=read.csv(file="testhe.csv",row.names = 1)
+for(x in 1:nrow(test)){
+  assign(paste("n", x, sep=""), sum(test[x,]))
+  tmp <- get(paste("n", x, sep=""))
+  b[x,1]=tmp 
+  NEW_d=rbind(train_d,test[x,])   
+  p=0
+  j=0
+for(m in 1:4){
+assign(paste("n", m, sep=""), sum(NEW_d[,m]))
+tmp <- get(paste("n", m, sep=""))
+    c[m,1]=tmp   
+p=p+c[m,1]*log(c[m,1],10)
+if(test[x,m]==0){
+j=0
+}else
+j=j+test[x,m]*log(test[x,m],10)
+}
+M_m_n=p-j-n_d
+M_N=sum(c[,1])
+D_M_N=M_N*log(M_N,10)-N_d*log(N_d,10)-b[x,1]*log(b[x,1],10)
+D=D_M_N-M_m_n
+h[x,1]=D
+}
+jieguo_d=rbind(jieguo_d,h)
+}
+jieguo1_d=jieguo_d[-1,]
+write.csv(jieguo1_d,file="tumor_deta_t2.csv")
+##########
+library(plyr)
+data_u=read.csv(file="feature_combine_11.csv",row.names = 1) 
+data_d=read.csv(file="feature_combine_22.csv",row.names = 1)
+jieguo_u=c("D")
+for (i in 1:1:nrow(data_u)){
+a=read.csv(file="14he.csv",row.names = 1)
+    train_d <- data_d 
+    n_d=0
+for(m in 1:4){
+     assign(paste("n", m, sep=""), sum(train_d[,m]))
+     tmp <- get(paste("n", m, sep=""))
+     a[m,1]=tmp
+     n_d=n_d+a[m,1]*log(a[m,1],10)  
+ }
+N_d=sum(a[,1])
+test_u <- data_u[i,]
+test=test_u 
+c=read.csv(file="14he.csv",row.names = 1)
+b=read.csv(file="testhe.csv",row.names = 1)
+h=read.csv(file="testhe.csv",row.names = 1)
+for(x in 1:nrow(test)){
+  assign(paste("n", x, sep=""), sum(test[x,]))
+  tmp <- get(paste("n", x, sep=""))
+  b[x,1]=tmp 
+  NEW_d=rbind(train_d,test[x,])   
+  p=0
+  j=0
+for(m in 1:4){
+assign(paste("n", m, sep=""), sum(NEW_d[,m]))
+tmp <- get(paste("n", m, sep=""))
+    c[m,1]=tmp   
+p=p+c[m,1]*log(c[m,1],10)
+if(test[x,m]==0){
+j=0
+}else
+j=j+test[x,m]*log(test[x,m],10)
+}
+M_m_n=p-j-n_d
+M_N=sum(c[,1])
+D_M_N=M_N*log(M_N,10)-N_d*log(N_d,10)-b[x,1]*log(b[x,1],10)
+D=D_M_N-M_m_n
+h[x,1]=D
+}
+jieguo_u=rbind(jieguo_u,h)
+}
+jieguo1_u=jieguo_u[-1,]
+write.csv(jieguo1_u,file="tumor_deta_t1.csv")
+
+
+#######
+data_u=read.csv(file="feature_combine_33.csv",row.names = 1)
+data_d=read.csv(file="feature_combine_44.csv",row.names = 1)
+test=rbind(data_u,data_d)
+write.csv(test[,1],file="test.csv")
+
+
+##########
+a1=read.csv(file="normal_deta_n1.csv",row.names = 1)
+a2=read.csv(file="normal_deta_n2.csv",row.names = 1)
+b1=read.csv(file="tumor_deta_t1.csv",row.names = 1)
+b2=read.csv(file="tumor_deta_t2.csv",row.names = 1)
+c=read.csv(file="test.csv",row.names = 1)
+d=cbind(a1,b1)
+e=cbind(a2,b2)
+f=rbind(d,e)
+jieguo=cbind(f,c)
+colnames(jieguo)=c("normal","tumor","teststart")
+write.csv(jieguo,file="jieguohebin_KRT7.C6orf223.cg22193385.cg18949415_.csv")
+m=data.frame()
+m=rbind(m,jieguo)
+n=nrow(jieguo)
+ for(j in 1:n){
+ if(jieguo[j,1]>jieguo[j,2]){
+ m[j,4]="A"
+}else{m[j,4]="B"
+ }
+colnames(m)=c("normal","tumor","test","pre")
+}
+write.csv(m,file="jieguo.pre.csv")
+
+
+
+#######
+a=read.csv(file="jieguo.pre.csv",row.names = 1)
+ll=table(a$pre,a$test)
+Sn=ll[1,1]/(ll[1,1]+ll[2,1])
+ACC=(ll[1,1]+ll[2,2])/(ll[1,1]+ll[2,2]+ll[1,2]+ll[2,1])
+MCC=(ll[1,1]*ll[2,2]-ll[1,2]*ll[2,1])/((sqrt(ll[1,1]+ll[1,2]))*(sqrt(ll[1,1]+ll[2,1]))*(sqrt(ll[2,2]+ll[1,2]))*(sqrt(ll[2,2]+ll[2,1])))
+Sp=ll[1,1]/(ll[1,1]+ll[1,2])
+result = cbind(ACC,Sn,Sp,MCC)
+colnames(result)=c("ACC","Sn","Sp","MCC")
+write.csv(result,file="result.csv")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

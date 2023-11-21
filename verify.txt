@@ -1,0 +1,691 @@
+##多因素生存分析 high66
+library("survival")
+library('survminer')
+library('dplyr')
+library('glmnet')
+library('ggplot2')
+library('GGally')
+library("rms")
+library('survivalROC')
+library("plotROC")
+survival_cancer=read.table("verify_high66.txt",header=T,row.names=1)
+cox <- coxph(Surv(time, state) ~ ., data =survival_cancer)
+cox <- step(cox,direction = "both") 
+riskScore=predict(cox,type="risk",newdata=survival_cancer)
+risk=as.vector(ifelse(riskScore>median(riskScore),"high","low"))
+write.csv(cbind(id=rownames(cbind(survival_cancer[,1:2],riskScore,risk)),
+                cbind(survival_cancer[,1:2],riskScore,risk)),file="verify_high66.csv",quote=F,row.names=F)
+				
+
+
+####KM  high66
+library("survival")
+library('survminer')
+library('dplyr')
+library('glmnet')
+library('ggplot2')
+library('GGally')
+library("rms")
+library('survivalROC')
+library("plotROC")
+dat1<-read.csv("verify_high66.csv",row.names = 1)
+my.surv<-Surv(dat1$time,dat1$state=='1')
+kmfit1<-survfit(my.surv~risk,data = dat1)
+summary(kmfit1)
+png(file="verify_high66.png")
+windowsFonts(RMN=windowsFont("Times New Roman"))
+mytheme=theme(plot.title=element_text(family="RMN",size="29"),
+              axis.text.x=element_text(family="RMN",size="29"),
+			  axis.title.x=element_text(family="RMN",size="29"),
+			  axis.text.y=element_text(family="RMN",size="29"),
+			  axis.title.y=element_text(family="RMN",size="29"),
+			  legend.title=element_text(family="RMN",size=29),
+			  legend.text=element_text(family="RMN",size=29),
+			  panel.grid.major=element_blank(),
+              panel.grid.minor=element_blank(),
+              panel.background=element_blank(),
+			  axis.line=element_line(colour='black'))			     	 			  
+n=ggsurvplot(kmfit1,pval=T,risk.table.col="strata",xlab="month",
+           palette=c("#e52b50","#8806ce"),pval.size=8,pval.family="RMN",
+           ggtheme=mytheme)
+print(n)
+dev.off()	  
+
+
+
+
+
+##多因素生存分析  age.low66
+library("survival")
+library('survminer')
+library('dplyr')
+library('glmnet')
+library('ggplot2')
+library('GGally')
+library("rms")
+library('survivalROC')
+library("plotROC")
+survival_cancer=read.table("verify_low66.txt",header=T,row.names=1)
+cox <- coxph(Surv(time, state) ~ ., data =survival_cancer)
+cox <- step(cox,direction = "both") 
+riskScore=predict(cox,type="risk",newdata=survival_cancer)
+risk=as.vector(ifelse(riskScore>median(riskScore),"high","low"))
+write.csv(cbind(id=rownames(cbind(survival_cancer[,1:2],riskScore,risk)),
+                cbind(survival_cancer[,1:2],riskScore,risk)),file="verify_low66.csv",quote=F,row.names=F)
+				
+
+
+####KM   age.low66
+library("survival")
+library('survminer')
+library('dplyr')
+library('glmnet')
+library('ggplot2')
+library('GGally')
+library("rms")
+library('survivalROC')
+library("plotROC")
+dat1<-read.csv("verify_low66.csv",row.names = 1)
+my.surv<-Surv(dat1$time,dat1$state=='1')
+kmfit1<-survfit(my.surv~risk,data = dat1)
+summary(kmfit1)
+png(file="verify_low66.png")
+windowsFonts(RMN=windowsFont("Times New Roman"))
+mytheme=theme(plot.title=element_text(family="RMN",size="29"),
+              axis.text.x=element_text(family="RMN",size="29"),
+			  axis.title.x=element_text(family="RMN",size="29"),
+			  axis.text.y=element_text(family="RMN",size="29"),
+			  axis.title.y=element_text(family="RMN",size="29"),
+			  legend.title=element_text(family="RMN",size=29),
+			  legend.text=element_text(family="RMN",size=29),
+			  panel.grid.major=element_blank(),
+              panel.grid.minor=element_blank(),
+              panel.background=element_blank(),
+			  axis.line=element_line(colour='black'))			     	 			  
+n=ggsurvplot(kmfit1,pval=T,risk.table.col="strata",xlab="month",
+           palette=c("#e52b50","#8806ce"),pval.size=8,pval.family="RMN",
+           ggtheme=mytheme)
+print(n)
+dev.off()	  
+
+
+
+
+
+
+
+
+##########################性别
+##多因素生存分析  female
+library("survival")
+library('survminer')
+library('dplyr')
+library('glmnet')
+library('ggplot2')
+library('GGally')
+library("rms")
+library('survivalROC')
+library("plotROC")
+survival_cancer=read.table("verify_female.txt",header=T,row.names=1)
+cox <- coxph(Surv(time, state) ~ ., data =survival_cancer)
+cox <- step(cox,direction = "both") 
+riskScore=predict(cox,type="risk",newdata=survival_cancer)
+risk=as.vector(ifelse(riskScore>median(riskScore),"high","low"))
+write.csv(cbind(id=rownames(cbind(survival_cancer[,1:2],riskScore,risk)),
+                cbind(survival_cancer[,1:2],riskScore,risk)),file="verify_female.csv",quote=F,row.names=F)
+				
+
+
+####KM   female
+library("survival")
+library('survminer')
+library('dplyr')
+library('glmnet')
+library('ggplot2')
+library('GGally')
+library("rms")
+library('survivalROC')
+library("plotROC")
+dat1<-read.csv("verify_female.csv",row.names = 1)
+my.surv<-Surv(dat1$time,dat1$state=='1')
+kmfit1<-survfit(my.surv~risk,data = dat1)
+summary(kmfit1)
+png(file="verify_female.png")
+windowsFonts(RMN=windowsFont("Times New Roman"))
+mytheme=theme(plot.title=element_text(family="RMN",size="29"),
+              axis.text.x=element_text(family="RMN",size="29"),
+			  axis.title.x=element_text(family="RMN",size="29"),
+			  axis.text.y=element_text(family="RMN",size="29"),
+			  axis.title.y=element_text(family="RMN",size="29"),
+			  legend.title=element_text(family="RMN",size=29),
+			  legend.text=element_text(family="RMN",size=29),
+			  panel.grid.major=element_blank(),
+              panel.grid.minor=element_blank(),
+              panel.background=element_blank(),
+			  axis.line=element_line(colour='black'))			     	 			  
+n=ggsurvplot(kmfit1,pval=T,risk.table.col="strata",xlab="month",
+           palette=c("#e52b50","#8806ce"),pval.size=8,pval.family="RMN",
+           ggtheme=mytheme)
+print(n)
+dev.off()	  
+
+
+
+
+
+
+##多因素生存分析  male
+library("survival")
+library('survminer')
+library('dplyr')
+library('glmnet')
+library('ggplot2')
+library('GGally')
+library("rms")
+library('survivalROC')
+library("plotROC")
+survival_cancer=read.table("verify_male.txt",header=T,row.names=1)
+cox <- coxph(Surv(time, state) ~ ., data =survival_cancer)
+cox <- step(cox,direction = "both") 
+riskScore=predict(cox,type="risk",newdata=survival_cancer)
+risk=as.vector(ifelse(riskScore>median(riskScore),"high","low"))
+write.csv(cbind(id=rownames(cbind(survival_cancer[,1:2],riskScore,risk)),
+                cbind(survival_cancer[,1:2],riskScore,risk)),file="verify_male.csv",quote=F,row.names=F)
+				
+
+
+####KM   male
+library("survival")
+library('survminer')
+library('dplyr')
+library('glmnet')
+library('ggplot2')
+library('GGally')
+library("rms")
+library('survivalROC')
+library("plotROC")
+dat1<-read.csv("verify_male.csv",row.names = 1)
+my.surv<-Surv(dat1$time,dat1$state=='1')
+kmfit1<-survfit(my.surv~risk,data = dat1)
+summary(kmfit1)
+png(file="verify_male.png")
+windowsFonts(RMN=windowsFont("Times New Roman"))
+mytheme=theme(plot.title=element_text(family="RMN",size="29"),
+              axis.text.x=element_text(family="RMN",size="29"),
+			  axis.title.x=element_text(family="RMN",size="29"),
+			  axis.text.y=element_text(family="RMN",size="29"),
+			  axis.title.y=element_text(family="RMN",size="29"),
+			  legend.title=element_text(family="RMN",size=29),
+			  legend.text=element_text(family="RMN",size=29),
+			  panel.grid.major=element_blank(),
+              panel.grid.minor=element_blank(),
+              panel.background=element_blank(),
+			  axis.line=element_line(colour='black'))			     	 			  
+n=ggsurvplot(kmfit1,pval=T,risk.table.col="strata",xlab="month",
+           palette=c("#e52b50","#8806ce"),pval.size=8,pval.family="RMN",
+           ggtheme=mytheme)
+print(n)
+dev.off()	  
+
+
+
+
+
+
+##########################病理阶段
+##多因素生存分析  stage12
+library("survival")
+library('survminer')
+library('dplyr')
+library('glmnet')
+library('ggplot2')
+library('GGally')
+library("rms")
+library('survivalROC')
+library("plotROC")
+survival_cancer=read.table("verify_stage12.txt",header=T,row.names=1)
+cox <- coxph(Surv(time, state) ~ ., data =survival_cancer)
+cox <- step(cox,direction = "both") 
+riskScore=predict(cox,type="risk",newdata=survival_cancer)
+risk=as.vector(ifelse(riskScore>median(riskScore),"high","low"))
+write.csv(cbind(id=rownames(cbind(survival_cancer[,1:2],riskScore,risk)),
+                cbind(survival_cancer[,1:2],riskScore,risk)),file="verify_stage12.csv",quote=F,row.names=F)
+				
+
+
+####KM   stage12
+library("survival")
+library('survminer')
+library('dplyr')
+library('glmnet')
+library('ggplot2')
+library('GGally')
+library("rms")
+library('survivalROC')
+library("plotROC")
+dat1<-read.csv("verify_stage12.csv",row.names = 1)
+my.surv<-Surv(dat1$time,dat1$state=='1')
+kmfit1<-survfit(my.surv~risk,data = dat1)
+summary(kmfit1)
+png(file="verify_stage12.png")
+windowsFonts(RMN=windowsFont("Times New Roman"))
+mytheme=theme(plot.title=element_text(family="RMN",size="29"),
+              axis.text.x=element_text(family="RMN",size="29"),
+			  axis.title.x=element_text(family="RMN",size="29"),
+			  axis.text.y=element_text(family="RMN",size="29"),
+			  axis.title.y=element_text(family="RMN",size="29"),
+			  legend.title=element_text(family="RMN",size=29),
+			  legend.text=element_text(family="RMN",size=29),
+			  panel.grid.major=element_blank(),
+              panel.grid.minor=element_blank(),
+              panel.background=element_blank(),
+			  axis.line=element_line(colour='black'))			     	 			  
+n=ggsurvplot(kmfit1,pval=T,risk.table.col="strata",xlab="month",
+           palette=c("#e52b50","#8806ce"),pval.size=8,pval.family="RMN",
+           ggtheme=mytheme)
+print(n)
+dev.off()	  
+
+
+
+##多因素生存分析  stage34
+library("survival")
+library('survminer')
+library('dplyr')
+library('glmnet')
+library('ggplot2')
+library('GGally')
+library("rms")
+library('survivalROC')
+library("plotROC")
+survival_cancer=read.table("verify_stage34.txt",header=T,row.names=1)
+cox <- coxph(Surv(time, state) ~ ., data =survival_cancer)
+cox <- step(cox,direction = "both") 
+riskScore=predict(cox,type="risk",newdata=survival_cancer)
+risk=as.vector(ifelse(riskScore>median(riskScore),"high","low"))
+write.csv(cbind(id=rownames(cbind(survival_cancer[,1:2],riskScore,risk)),
+                cbind(survival_cancer[,1:2],riskScore,risk)),file="verify_stage34.csv",quote=F,row.names=F)
+				
+
+
+####KM   stage34
+library("survival")
+library('survminer')
+library('dplyr')
+library('glmnet')
+library('ggplot2')
+library('GGally')
+library("rms")
+library('survivalROC')
+library("plotROC")
+dat1<-read.csv("verify_stage34.csv",row.names = 1)
+my.surv<-Surv(dat1$time,dat1$state=='1')
+kmfit1<-survfit(my.surv~risk,data = dat1)
+summary(kmfit1)
+png(file="verify_stage34.png")
+windowsFonts(RMN=windowsFont("Times New Roman"))
+mytheme=theme(plot.title=element_text(family="RMN",size="29"),
+              axis.text.x=element_text(family="RMN",size="29"),
+			  axis.title.x=element_text(family="RMN",size="29"),
+			  axis.text.y=element_text(family="RMN",size="29"),
+			  axis.title.y=element_text(family="RMN",size="29"),
+			  legend.title=element_text(family="RMN",size=29),
+			  legend.text=element_text(family="RMN",size=29),
+			  panel.grid.major=element_blank(),
+              panel.grid.minor=element_blank(),
+              panel.background=element_blank(),
+			  axis.line=element_line(colour='black'))			     	 			  
+n=ggsurvplot(kmfit1,pval=T,risk.table.col="strata",xlab="month",
+           palette=c("#e52b50","#8806ce"),pval.size=8,pval.family="RMN",
+           ggtheme=mytheme)
+print(n)
+dev.off()	  
+
+
+
+
+##########################病理阶段
+##多因素生存分析  M0
+library("survival")
+library('survminer')
+library('dplyr')
+library('glmnet')
+library('ggplot2')
+library('GGally')
+library("rms")
+library('survivalROC')
+library("plotROC")
+survival_cancer=read.table("verify_M0.txt",header=T,row.names=1)
+cox <- coxph(Surv(time, state) ~ ., data =survival_cancer)
+cox <- step(cox,direction = "both") 
+riskScore=predict(cox,type="risk",newdata=survival_cancer)
+risk=as.vector(ifelse(riskScore>median(riskScore),"high","low"))
+write.csv(cbind(id=rownames(cbind(survival_cancer[,1:2],riskScore,risk)),
+                cbind(survival_cancer[,1:2],riskScore,risk)),file="verify_M0.csv",quote=F,row.names=F)
+				
+
+
+####KM   M0
+library("survival")
+library('survminer')
+library('dplyr')
+library('glmnet')
+library('ggplot2')
+library('GGally')
+library("rms")
+library('survivalROC')
+library("plotROC")
+dat1<-read.csv("verify_M0.csv",row.names = 1)
+my.surv<-Surv(dat1$time,dat1$state=='1')
+kmfit1<-survfit(my.surv~risk,data = dat1)
+summary(kmfit1)
+png(file="verify_M0.png")
+windowsFonts(RMN=windowsFont("Times New Roman"))
+mytheme=theme(plot.title=element_text(family="RMN",size="29"),
+              axis.text.x=element_text(family="RMN",size="29"),
+			  axis.title.x=element_text(family="RMN",size="29"),
+			  axis.text.y=element_text(family="RMN",size="29"),
+			  axis.title.y=element_text(family="RMN",size="29"),
+			  legend.title=element_text(family="RMN",size=29),
+			  legend.text=element_text(family="RMN",size=29),
+			  panel.grid.major=element_blank(),
+              panel.grid.minor=element_blank(),
+              panel.background=element_blank(),
+			  axis.line=element_line(colour='black'))			     	 			  
+n=ggsurvplot(kmfit1,pval=T,risk.table.col="strata",xlab="month",
+           palette=c("#e52b50","#8806ce"),pval.size=8,pval.family="RMN",
+           ggtheme=mytheme)
+print(n)
+dev.off()	  
+
+
+
+##多因素生存分析  M1
+library("survival")
+library('survminer')
+library('dplyr')
+library('glmnet')
+library('ggplot2')
+library('GGally')
+library("rms")
+library('survivalROC')
+library("plotROC")
+survival_cancer=read.table("verify_M1.txt",header=T,row.names=1)
+cox <- coxph(Surv(time, state) ~ ., data =survival_cancer)
+cox <- step(cox,direction = "both") 
+riskScore=predict(cox,type="risk",newdata=survival_cancer)
+risk=as.vector(ifelse(riskScore>median(riskScore),"high","low"))
+write.csv(cbind(id=rownames(cbind(survival_cancer[,1:2],riskScore,risk)),
+                cbind(survival_cancer[,1:2],riskScore,risk)),file="verify_M1.csv",quote=F,row.names=F)
+				
+
+
+####KM   M1
+library("survival")
+library('survminer')
+library('dplyr')
+library('glmnet')
+library('ggplot2')
+library('GGally')
+library("rms")
+library('survivalROC')
+library("plotROC")
+dat1<-read.csv("verify_M1.csv",row.names = 1)
+my.surv<-Surv(dat1$time,dat1$state=='1')
+kmfit1<-survfit(my.surv~risk,data = dat1)
+summary(kmfit1)
+png(file="verify_M1.png")
+windowsFonts(RMN=windowsFont("Times New Roman"))
+mytheme=theme(plot.title=element_text(family="RMN",size="29"),
+              axis.text.x=element_text(family="RMN",size="29"),
+			  axis.title.x=element_text(family="RMN",size="29"),
+			  axis.text.y=element_text(family="RMN",size="29"),
+			  axis.title.y=element_text(family="RMN",size="29"),
+			  legend.title=element_text(family="RMN",size=29),
+			  legend.text=element_text(family="RMN",size=29),
+			  panel.grid.major=element_blank(),
+              panel.grid.minor=element_blank(),
+              panel.background=element_blank(),
+			  axis.line=element_line(colour='black'))			     	 			  
+n=ggsurvplot(kmfit1,pval=T,risk.table.col="strata",xlab="month",
+           palette=c("#e52b50","#8806ce"),pval.size=8,pval.family="RMN",
+           ggtheme=mytheme)
+print(n)
+dev.off()	  
+
+
+
+
+
+
+##多因素生存分析  N0
+library("survival")
+library('survminer')
+library('dplyr')
+library('glmnet')
+library('ggplot2')
+library('GGally')
+library("rms")
+library('survivalROC')
+library("plotROC")
+survival_cancer=read.table("verify_N0.txt",header=T,row.names=1)
+cox <- coxph(Surv(time, state) ~ ., data =survival_cancer)
+cox <- step(cox,direction = "both") 
+riskScore=predict(cox,type="risk",newdata=survival_cancer)
+risk=as.vector(ifelse(riskScore>median(riskScore),"high","low"))
+write.csv(cbind(id=rownames(cbind(survival_cancer[,1:2],riskScore,risk)),
+                cbind(survival_cancer[,1:2],riskScore,risk)),file="verify_N0.csv",quote=F,row.names=F)
+				
+
+
+####KM   N0
+library("survival")
+library('survminer')
+library('dplyr')
+library('glmnet')
+library('ggplot2')
+library('GGally')
+library("rms")
+library('survivalROC')
+library("plotROC")
+dat1<-read.csv("verify_N0.csv",row.names = 1)
+my.surv<-Surv(dat1$time,dat1$state=='1')
+kmfit1<-survfit(my.surv~risk,data = dat1)
+summary(kmfit1)
+png(file="verify_N0.png")
+windowsFonts(RMN=windowsFont("Times New Roman"))
+mytheme=theme(plot.title=element_text(family="RMN",size="29"),
+              axis.text.x=element_text(family="RMN",size="29"),
+			  axis.title.x=element_text(family="RMN",size="29"),
+			  axis.text.y=element_text(family="RMN",size="29"),
+			  axis.title.y=element_text(family="RMN",size="29"),
+			  legend.title=element_text(family="RMN",size=29),
+			  legend.text=element_text(family="RMN",size=29),
+			  panel.grid.major=element_blank(),
+              panel.grid.minor=element_blank(),
+              panel.background=element_blank(),
+			  axis.line=element_line(colour='black'))			     	 			  
+n=ggsurvplot(kmfit1,pval=T,risk.table.col="strata",xlab="month",
+           palette=c("#e52b50","#8806ce"),pval.size=8,pval.family="RMN",
+           ggtheme=mytheme)
+print(n)
+dev.off()	  
+
+
+
+
+
+
+
+
+
+##多因素生存分析  N12
+library("survival")
+library('survminer')
+library('dplyr')
+library('glmnet')
+library('ggplot2')
+library('GGally')
+library("rms")
+library('survivalROC')
+library("plotROC")
+survival_cancer=read.table("verify_N12.txt",header=T,row.names=1)
+cox <- coxph(Surv(time, state) ~ ., data =survival_cancer)
+cox <- step(cox,direction = "both") 
+riskScore=predict(cox,type="risk",newdata=survival_cancer)
+risk=as.vector(ifelse(riskScore>median(riskScore),"high","low"))
+write.csv(cbind(id=rownames(cbind(survival_cancer[,1:2],riskScore,risk)),
+                cbind(survival_cancer[,1:2],riskScore,risk)),file="verify_N12.csv",quote=F,row.names=F)
+				
+
+
+####KM   N12
+library("survival")
+library('survminer')
+library('dplyr')
+library('glmnet')
+library('ggplot2')
+library('GGally')
+library("rms")
+library('survivalROC')
+library("plotROC")
+dat1<-read.csv("verify_N12.csv",row.names = 1)
+my.surv<-Surv(dat1$time,dat1$state=='1')
+kmfit1<-survfit(my.surv~risk,data = dat1)
+summary(kmfit1)
+png(file="verify_N12.png")
+windowsFonts(RMN=windowsFont("Times New Roman"))
+mytheme=theme(plot.title=element_text(family="RMN",size="29"),
+              axis.text.x=element_text(family="RMN",size="29"),
+			  axis.title.x=element_text(family="RMN",size="29"),
+			  axis.text.y=element_text(family="RMN",size="29"),
+			  axis.title.y=element_text(family="RMN",size="29"),
+			  legend.title=element_text(family="RMN",size=29),
+			  legend.text=element_text(family="RMN",size=29),
+			  panel.grid.major=element_blank(),
+              panel.grid.minor=element_blank(),
+              panel.background=element_blank(),
+			  axis.line=element_line(colour='black'))			     	 			  
+n=ggsurvplot(kmfit1,pval=T,risk.table.col="strata",xlab="month",
+           palette=c("#e52b50","#8806ce"),pval.size=8,pval.family="RMN",
+           ggtheme=mytheme)
+print(n)
+dev.off()	  
+
+
+
+
+
+
+##多因素生存分析  T12
+library("survival")
+library('survminer')
+library('dplyr')
+library('glmnet')
+library('ggplot2')
+library('GGally')
+library("rms")
+library('survivalROC')
+library("plotROC")
+survival_cancer=read.table("verify_T12.txt",header=T,row.names=1)
+cox <- coxph(Surv(time, state) ~ ., data =survival_cancer)
+cox <- step(cox,direction = "both") 
+riskScore=predict(cox,type="risk",newdata=survival_cancer)
+risk=as.vector(ifelse(riskScore>median(riskScore),"high","low"))
+write.csv(cbind(id=rownames(cbind(survival_cancer[,1:2],riskScore,risk)),
+                cbind(survival_cancer[,1:2],riskScore,risk)),file="verify_T12.csv",quote=F,row.names=F)
+				
+
+
+####KM   T12
+library("survival")
+library('survminer')
+library('dplyr')
+library('glmnet')
+library('ggplot2')
+library('GGally')
+library("rms")
+library('survivalROC')
+library("plotROC")
+dat1<-read.csv("verify_T12.csv",row.names = 1)
+my.surv<-Surv(dat1$time,dat1$state=='1')
+kmfit1<-survfit(my.surv~risk,data = dat1)
+summary(kmfit1)
+png(file="verify_T12.png")
+windowsFonts(RMN=windowsFont("Times New Roman"))
+mytheme=theme(plot.title=element_text(family="RMN",size="29"),
+              axis.text.x=element_text(family="RMN",size="29"),
+			  axis.title.x=element_text(family="RMN",size="29"),
+			  axis.text.y=element_text(family="RMN",size="29"),
+			  axis.title.y=element_text(family="RMN",size="29"),
+			  legend.title=element_text(family="RMN",size=29),
+			  legend.text=element_text(family="RMN",size=29),
+			  panel.grid.major=element_blank(),
+              panel.grid.minor=element_blank(),
+              panel.background=element_blank(),
+			  axis.line=element_line(colour='black'))			     	 			  
+n=ggsurvplot(kmfit1,pval=T,risk.table.col="strata",xlab="month",
+           palette=c("#e52b50","#8806ce"),pval.size=8,pval.family="RMN",
+           ggtheme=mytheme)
+print(n)
+dev.off()	  
+
+
+
+##多因素生存分析  T34
+library("survival")
+library('survminer')
+library('dplyr')
+library('glmnet')
+library('ggplot2')
+library('GGally')
+library("rms")
+library('survivalROC')
+library("plotROC")
+survival_cancer=read.table("verify_T34.txt",header=T,row.names=1)
+cox <- coxph(Surv(time, state) ~ ., data =survival_cancer)
+cox <- step(cox,direction = "both") 
+riskScore=predict(cox,type="risk",newdata=survival_cancer)
+risk=as.vector(ifelse(riskScore>median(riskScore),"high","low"))
+write.csv(cbind(id=rownames(cbind(survival_cancer[,1:2],riskScore,risk)),
+                cbind(survival_cancer[,1:2],riskScore,risk)),file="verify_T34.csv",quote=F,row.names=F)
+				
+
+
+####KM   T34
+library("survival")
+library('survminer')
+library('dplyr')
+library('glmnet')
+library('ggplot2')
+library('GGally')
+library("rms")
+library('survivalROC')
+library("plotROC")
+dat1<-read.csv("verify_T34.csv",row.names = 1)
+my.surv<-Surv(dat1$time,dat1$state=='1')
+kmfit1<-survfit(my.surv~risk,data = dat1)
+summary(kmfit1)
+png(file="verify_T34.png")
+windowsFonts(RMN=windowsFont("Times New Roman"))
+mytheme=theme(plot.title=element_text(family="RMN",size="29"),
+              axis.text.x=element_text(family="RMN",size="29"),
+			  axis.title.x=element_text(family="RMN",size="29"),
+			  axis.text.y=element_text(family="RMN",size="29"),
+			  axis.title.y=element_text(family="RMN",size="29"),
+			  legend.title=element_text(family="RMN",size=29),
+			  legend.text=element_text(family="RMN",size=29),
+			  panel.grid.major=element_blank(),
+              panel.grid.minor=element_blank(),
+              panel.background=element_blank(),
+			  axis.line=element_line(colour='black'))			     	 			  
+n=ggsurvplot(kmfit1,pval=T,risk.table.col="strata",xlab="month",
+           palette=c("#e52b50","#8806ce"),pval.size=8,pval.family="RMN",
+           ggtheme=mytheme)
+print(n)
+dev.off()	  
+
+
+
+
+

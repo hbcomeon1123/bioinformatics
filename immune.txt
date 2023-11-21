@@ -1,0 +1,76 @@
+######免疫细胞的丰度
+rm(list=ls())
+library(genefilter)
+library(GSVA)
+library(Biobase)
+library(stringr)
+setwd("I:\\baihui\\COAD\\LM.updown\\immune microenvironment")
+a=read.table("expre.txt",sep = "\t",header = T,row.names=1)
+b=read.csv("immune.infiltration.csv",header = T)
+gene_set=b[,1:2]
+list=split(as.matrix(gene_set)[,1], gene_set[,2])
+gsva_matrix=gsva(as.matrix(a),list,method='ssgsea',kcdf='Gaussian',abs.ranking=TRUE)
+write.table(gsva_matrix,file="immune11.txt",sep="\t",quote=F)
+dim(gsva_matrix)
+
+
+
+#####相关性计算
+rm(list=ls())
+setwd("I:\\baihui\\COAD\\LM.updown\\immune microenvironment")
+a=read.table("immune11.txt",sep = "\t",header = T,row.names=1)
+a1=t(a)
+a2=a1[order(rownames(a1)),]
+dim(a2)
+b=read.table("expre2.txt",sep = "\t",header = T,row.names=1)
+b1=t(b)
+b2=b1[order(rownames(b1)),]
+dim(b2)
+d=cbind(a2,b2)
+e=cor(d,use = "everything", method = c("spearman"))
+f=e[,-(1:14)]
+f1=f[-(15:16),]
+write.table(f1,file ="immune.2.11.txt",sep = "\t",quote = F)
+
+
+
+
+######免疫通路得分
+rm(list=ls())
+library(genefilter)
+library(GSVA)
+library(Biobase)
+library(stringr)
+setwd("I:\\baihui\\COAD\\LM.updown\\immune microenvironment")
+a=read.table("expre.txt",sep = "\t",header = T,row.names=1)
+b=read.table("immune.reaction.gene.sets.txt",sep = "\t",header = T)
+d=b[,-(2:5)]
+gene_set=d[,1:2]
+list=split(as.matrix(gene_set)[,1], gene_set[,2])
+gsva_matrix=gsva(as.matrix(a),list,method='ssgsea',kcdf='Gaussian',abs.ranking=TRUE)
+write.table(gsva_matrix,file="immune22.txt",sep="\t",quote=F)
+dim(gsva_matrix)
+
+
+#####相关性计算
+rm(list=ls())
+setwd("I:\\baihui\\COAD\\LM.updown\\immune microenvironment")
+a=read.table("immune22.txt",sep = "\t",header = T,row.names=1)
+a1=t(a)
+a2=a1[order(rownames(a1)),]
+dim(a2)
+b=read.table("expre2.txt",sep = "\t",header = T,row.names=1)
+b1=t(b)
+b2=b1[order(rownames(b1)),]
+dim(b2)
+d=cbind(a2,b2)
+e=cor(d,use = "everything", method = c("spearman"))
+f=e[,-(1:10)]
+f1=f[-(11:12),]
+write.table(f1,file ="immune.2.22.txt",sep = "\t",quote = F)
+
+
+
+
+
+

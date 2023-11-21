@@ -1,0 +1,60 @@
+#########KM生存曲线
+library("survival")
+library('survminer')
+library('dplyr')
+library('glmnet')
+library('ggplot2')
+library('GGally')
+library("rms")
+library('survivalROC')
+library("plotROC")
+dat1<-read.csv("many.risk.csv",row.names = 1)
+my.surv<-Surv(dat1$time,dat1$state=='1')
+kmfit1<-survfit(my.surv~risk,data = dat1)
+summary(kmfit1)
+png(file="LM_survival.png")
+windowsFonts(RMN=windowsFont("Times New Roman"))
+mytheme=theme(plot.title=element_text(family="RMN",size="33"),
+              axis.text.x=element_text(family="RMN",size="32"),
+			  axis.title.x=element_text(family="RMN",size="33"),
+			  axis.text.y=element_text(family="RMN",size="32"),
+			  axis.title.y=element_text(family="RMN",size="33"),
+			  legend.title=element_text(family="RMN",size=28),
+			  legend.text=element_text(family="RMN",size=28),
+			  panel.grid.major=element_blank(),
+              panel.grid.minor=element_blank(),
+              panel.background=element_blank(),
+			  axis.line=element_line(colour='black'))			     	 			  
+n=ggsurvplot(kmfit1,pval=T,risk.table.col="strata",xlab="month",
+           palette=c("#e52b50","#8806ce"),pval.size=8,pval.family="RMN",
+           ggtheme=mytheme)
+print(n)
+dev.off()	  
+
+
+
+#######ROC曲线分析
+library("survival")
+library('survminer')
+library('dplyr')
+library('glmnet')
+library('ggplot2')
+library('GGally')
+library("rms")
+library('survivalROC')
+library("plotROC")
+library(pROC)
+target.url1 <- 'many.risk.csv'
+data <- read.csv(target.url1,header = T) 
+windowsFonts(HEL=windowsFont("Helvetica CE 55 Roman"),
+             RMN=windowsFont("Times New Roman"),
+             ARL=windowsFont("Arial"))
+{  
+  lxrroc1 <- plot.roc(data$state, data$riskScore)  
+  best<-coords(lxrroc1, "best", ret ="all", transpose =F)
+  plot.roc(lxrroc1,col="#FF6665", identity.col ="grey", legacy.axes=T,
+  print.auc.x=0.5,print.auc.y=0.4,cex.lab=2.5,cex.axis=2.4,cex.main=2.5,family="RMN")  
+  legend("bottomright",paste('AUC=',round(lxrroc1$auc,3),sep = ""),cex=2.1) 
+}
+
+

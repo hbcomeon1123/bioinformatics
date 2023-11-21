@@ -1,0 +1,4 @@
+a=read.table("gene.txt",sep="\t",header=T,row.names=1)
+jieguo=cor(a,use = "everything", method = c("spearman"))
+write.table(jieguo,file="gene.cor.txt",quote=F,sep="\t")
+

@@ -1,0 +1,23 @@
+library("survival")
+library('survminer')
+library('dplyr')
+library('glmnet')
+library('ggplot2')
+library('GGally')
+library("rms")
+library('survivalROC')
+library("plotROC")
+survival_cancer=read.table("survival.cancer_many.txt",header=T,row.names=1)
+cox <- coxph(Surv(time, state) ~ ., data =survival_cancer)
+cox <- step(cox,direction = "both") 
+riskScore=predict(cox,type="risk",newdata=survival_cancer)
+risk=as.vector(ifelse(riskScore>median(riskScore),"high","low"))
+write.csv(cbind(id=rownames(cbind(survival_cancer[,1:2],riskScore,risk)),
+                cbind(survival_cancer[,1:2],riskScore,risk)),file="many.risk.csv",quote=F,row.names=F)
+cox
+summary(cox)
+
+
+
+
+
